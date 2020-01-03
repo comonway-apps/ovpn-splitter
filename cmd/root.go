@@ -127,11 +127,13 @@ tls-auth files from a client.ovpn file.`,
 		keyDirTmp := reKeyDir.FindStringSubmatch(string(content))
 		var keyDir string = string(keyDirTmp[1])
 
+		readmeF := fmt.Sprintf(readme, domainName, "1194/1194", "UDP", cipher, bind, negTime, keyDir)
+
 		// Print to screen readme.txt content
-		log.Printf(readme, domainName, "1194/1194", "UDP", cipher, bind, negTime, keyDir)
+		log.Print(readmeF)
 
 		// Save readme.txt to file
-		err = ioutil.WriteFile(dir+"/"+fileName+".readme.txt", []byte(readme), 0777)
+		err = ioutil.WriteFile(dir+"/"+fileName+".readme.txt", []byte(readmeF), 0777)
 		if err != nil {
 			log.Fatalf("Writing '%s.readme.txt': %s", fileName, err)
 		}
@@ -150,6 +152,8 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
+	// Suppress windows helping text
+	cobra.MousetrapHelpText = ""
 }
 
 // initConfig reads in config file and ENV variables if set.
