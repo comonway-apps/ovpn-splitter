@@ -1,4 +1,4 @@
-module github.com/eyxance/ovpn-splitter
+module github.com/comonway-apps/ovpn-splitter
 
 go 1.13
 

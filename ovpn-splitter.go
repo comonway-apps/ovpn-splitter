@@ -15,7 +15,7 @@ limitations under the License.
 */
 package main
 
-import "github.com/eyxance/ovpn-splitter/cmd"
+import "github.com/comonway-apps/ovpn-splitter/cmd"
 
 func main() {
 	cmd.Execute()
