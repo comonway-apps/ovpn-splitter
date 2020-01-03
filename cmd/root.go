@@ -31,8 +31,8 @@ var readme string = `
 =======================================================
 Find below OpenVPN remote configuration
     
-Remote site domain name= %s
-Tunnel over port (local/remote)= %s
+Domain name= %s
+Port= %s
 Protocol= %s
 Cipher= %s
 Bind to local address or port= %s
@@ -81,7 +81,7 @@ tls-auth files from a client.ovpn file.`,
 		reCert := regexp.MustCompile(`<cert>\n([\(\)\#\n\-\+\/\= a-zA-Z0-9]+)</cert>`)
 		reKey := regexp.MustCompile(`<key>\n([\(\)\#\n\-\+\/\= a-zA-Z0-9]+)</key>`)
 		reTlsAuth := regexp.MustCompile(`<tls-auth>\n([\(\)\#\n\-\+\/\= a-zA-Z0-9]+)</tls-auth>`)
-		reRemote := regexp.MustCompile(`OVPN_ACCESS_SERVER_WSHOST=([\. a-zA-Z0-9]+):([0-9]+)`)
+		reRemote := regexp.MustCompile(`remote ([.a-z0-9]+) ([0-9]+) ([a-zA-Z]+)`)
 		reCipher := regexp.MustCompile(`cipher ([\-a-zA-Z0-9]+)`)
 		reNegTime := regexp.MustCompile(`reneg-sec ([0-9]+)`)
 		reKeyDir := regexp.MustCompile(`key-direction ([0-1])`)
@@ -113,8 +113,12 @@ tls-auth files from a client.ovpn file.`,
 		}
 
 		// Create a Readme.txt
-		domainTmp := reRemote.FindAllStringSubmatch(string(content), -1)
-		var domainName string = domainTmp[0][1]
+		domainTmp := reRemote.FindStringSubmatch(string(content))
+		//log.Print(domainTmp)
+		var domainName string = domainTmp[1]
+		var domainPort string = domainTmp[2]
+		var domainProtocol string = strings.ToUpper(domainTmp[3])
+
 		cipherTmp := reCipher.FindStringSubmatch(string(content))
 		var cipher string = string(cipherTmp[1])
 		var bind string = "Yes"
@@ -127,7 +131,7 @@ tls-auth files from a client.ovpn file.`,
 		keyDirTmp := reKeyDir.FindStringSubmatch(string(content))
 		var keyDir string = string(keyDirTmp[1])
 
-		readmeF := fmt.Sprintf(readme, domainName, "1194/1194", "UDP", cipher, bind, negTime, keyDir)
+		readmeF := fmt.Sprintf(readme, domainName, domainPort, domainProtocol, cipher, bind, negTime, keyDir)
 
 		// Print to screen readme.txt content
 		log.Print(readmeF)
