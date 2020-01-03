@@ -8,7 +8,12 @@ This CLI utility split opvn file from OpenVPN Access Server to several files:
 - key
 - tls-auth
 
-**Just do**
+## Using OpenVPN splitter
+
+**For Windows**
+Drag-and-Drop your opvn file on ovpn-splitter.exe
+
+or
 
 ``` shell
 $ go build
